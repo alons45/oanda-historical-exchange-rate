@@ -1,4 +1,5 @@
 # coding=utf-8
+import re
 from csv import reader
 from requests import get
 
@@ -37,5 +38,8 @@ class Currency:
                     temporary_dict['value'] = row[0]
                     dictionary_list.append(temporary_dict)
                 j += 1
+
+        dictionary_list.sort()
+        dictionary_list = dictionary_list[:len(dictionary_list) - 5]
 
         return dictionary_list
