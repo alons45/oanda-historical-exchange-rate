@@ -1,5 +1,4 @@
 # coding=utf-8
-import re
 from csv import reader
 from requests import get
 
@@ -17,7 +16,7 @@ class Currency:
             from_currency=from_currency, to_currency=to_currency, period=period
         )
 
-    def historical(self, start_date, end_date):
+    def historical(self, start_date, end_date, raw=False):
 
         dictionary_list = []
 
@@ -25,21 +24,24 @@ class Currency:
             start_date=start_date, end_date=end_date
         )
 
-        csv_raw = get(url)
-        csv_object = reader(csv_raw.text, delimiter=',')
+        csv_http = get(url)
+        csv_object = reader(csv_http.text, delimiter=',')
 
-        j = 1
-        for row in csv_object:
-            if not len(row) == 0 and not '' in row:
-                if j % 2 != 0:
-                    temporary_dict = {}
-                    temporary_dict['date'] = row[0]
-                else:
-                    temporary_dict['value'] = row[0]
-                    dictionary_list.append(temporary_dict)
-                j += 1
+        if raw is False:
+            j = 1
+            for row in csv_object:
+                if not len(row) == 0 and not '' in row:
+                    if j % 2 != 0:
+                        temporary_dict = {}
+                        temporary_dict['date'] = row[0]
+                    else:
+                        temporary_dict['value'] = row[0]
+                        dictionary_list.append(temporary_dict)
+                    j += 1
 
-        dictionary_list.sort()
-        dictionary_list = dictionary_list[:len(dictionary_list) - 5]
+            dictionary_list.sort()
+            dictionary_list = dictionary_list[:len(dictionary_list) - 5]
+        else:
+            return csv_object
 
         return dictionary_list
