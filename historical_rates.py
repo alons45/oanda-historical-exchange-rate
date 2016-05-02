@@ -39,7 +39,7 @@ class Currency:
                         dictionary_list.append(temporary_dict)
                     j += 1
 
-            dictionary_list.sort()
+            dictionary_list.sort(key=lambda x: x['date'])
             dictionary_list = dictionary_list[:len(dictionary_list) - 5]
         else:
             return csv_object
